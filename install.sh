@@ -51,21 +51,15 @@ esac
 
 # 笨笨的检测方法
 if [[ $(command -v apt-get) || $(command -v yum) ]] && [[ $(command -v systemctl) ]]; then
-
 	if [[ $(command -v yum) ]]; then
-
 		cmd="yum"
-
 	fi
-
 else
-
 	echo -e " 
 	哈哈……这个 ${red}辣鸡脚本${none} 不支持你的系统。 ${yellow}(-_-) ${none}
 
 	备注: 仅支持 Ubuntu 16+ / Debian 8+ / CentOS 7+ 系统
 	" && exit 1
-
 fi
 
 uuid=$(cat /proc/sys/kernel/random/uuid)
@@ -75,7 +69,6 @@ v2ray_client_config="/etc/v2ray/233blog_v2ray_config.json"
 backup="/etc/v2ray/233blog_v2ray_backup.conf"
 _v2ray_sh="/usr/local/sbin/v2ray"
 systemd=true
-# _test=true
 
 transport=(
 	TCP
@@ -245,7 +238,6 @@ v2ray_dynamic_port_start() {
 			error
 			;;
 		esac
-
 	done
 
 	if [[ $v2ray_dynamic_port_start_input -lt $v2ray_port ]]; then
@@ -288,7 +280,6 @@ v2ray_dynamic_port_end() {
 			error
 			;;
 		esac
-
 	done
 
 }
@@ -558,7 +549,6 @@ shadowsocks_config() {
 		else
 			error
 		fi
-
 	done
 
 }
@@ -608,7 +598,6 @@ shadowsocks_port_config() {
 			error
 			;;
 		esac
-
 	done
 
 	shadowsocks_password_config
@@ -635,7 +624,6 @@ shadowsocks_password_config() {
 			break
 			;;
 		esac
-
 	done
 
 	shadowsocks_ciphers_config
@@ -666,7 +654,6 @@ shadowsocks_ciphers_config() {
 			error
 			;;
 		esac
-
 	done
 	pause
 }
@@ -736,14 +723,7 @@ install_info() {
 }
 
 domain_check() {
-	# if [[ $cmd == "yum" ]]; then
-	# 	yum install bind-utils -y
-	# else
-	# 	$cmd install dnsutils -y
-	# fi
-	# test_domain=$(dig $domain +short)
-	# test_domain=$(ping $domain -c 1 -4 | grep -oE -m1 "([0-9]{1,3}\.){3}[0-9]{1,3}")
-	# test_domain=$(wget -qO- --header='accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -1)
+	
 	test_domain=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -1)
 	if [[ $test_domain != $ip ]]; then
 		echo
@@ -760,7 +740,6 @@ domain_check() {
 }
 
 install_caddy() {
-	# download caddy file then install
 	_load download-caddy.sh
 	_download_caddy_file
 	_install_caddy_service
@@ -768,10 +747,9 @@ install_caddy() {
 
 }
 caddy_config() {
-	# local email=$(shuf -i1-10000000000 -n1)
+
 	_load caddy-config.sh
 
-	# systemctl restart caddy
 	do_service restart caddy
 }
 
@@ -837,24 +815,6 @@ config() {
 	fi
 	_load config.sh
 
-	# if [[ $cmd == "apt-get" ]]; then
-	# 	cat >/etc/network/if-pre-up.d/iptables <<-EOF
-	# 		#!/bin/sh
-	# 		/sbin/iptables-restore < /etc/iptables.rules.v4
-	# 		/sbin/ip6tables-restore < /etc/iptables.rules.v6
-	# 	EOF
-	# 	chmod +x /etc/network/if-pre-up.d/iptables
-	# 	# else
-	# 	# 	[ $(pgrep "firewall") ] && systemctl stop firewalld
-	# 	# 	systemctl mask firewalld
-	# 	# 	systemctl disable firewalld
-	# 	# 	systemctl enable iptables
-	# 	# 	systemctl enable ip6tables
-	# 	# 	systemctl start iptables
-	# 	# 	systemctl start ip6tables
-	# fi
-	
-	# systemctl restart v2ray
 	do_service restart v2ray
 	backup_config
 
